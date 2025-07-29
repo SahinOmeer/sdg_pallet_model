@@ -109,6 +109,18 @@ For more options
 python3 predict.py --help
 ```
 
+### Step 5 - Run inference on a rosbag
+
+The ``rosbag_predict.py`` script allows running inference on frames stored in a
+ROS bag file. It requires a ROS environment with ``rosbag`` and ``cv_bridge``
+installed.
+
+```bash
+python3 rosbag_predict.py <engine_path> <bag_path> \
+    --image-topic=/camera/image_raw \
+    --output-video=pallet_output.mp4
+```
+
 ### Next Steps
 
 Try modifying the predict.py code to visualize inference on a live camera feed.
