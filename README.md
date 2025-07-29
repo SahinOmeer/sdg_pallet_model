@@ -113,7 +113,8 @@ python3 predict.py --help
 
 The ``rosbag_predict.py`` script allows running inference on frames stored in a
 ROS **1** bag file. It requires a ROS environment with ``rosbag`` and
-``cv_bridge`` installed.
+``cv_bridge`` installed. The script uses a dedicated CUDA stream to avoid
+blocking the default stream during TensorRT execution.
 
 ```bash
 python3 rosbag_predict.py <engine_path> <bag_path> \

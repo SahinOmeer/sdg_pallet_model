@@ -100,6 +100,7 @@ def main():
     bridge = CvBridge()
 
     writer = None
+    stream = torch.cuda.Stream()
 
     with torch.no_grad():
         for topic, msg, t in bag.read_messages(topics=[args.image_topic]):
@@ -114,22 +115,24 @@ def main():
             image_proc, _, _ = utils.pad_resize(image_rgb, inference_size)
 
             x = utils.format_bgr8_image(image_proc)
-            x = x.to("cuda")
+            x = x.to("cuda", non_blocking=True)
 
-            heatmap, vectormap = model(x)
+            with torch.cuda.stream(stream):
+                heatmap, vectormap = model(x)
 
-            keypointmap = utils.vectormap_to_keypointmap(
-                offset_grid,
-                vectormap
-            )
+                keypointmap = utils.vectormap_to_keypointmap(
+                    offset_grid,
+                    vectormap
+                )
 
-            peak_mask = utils.find_heatmap_peak_mask(
-                heatmap,
-                peak_window,
-                args.peak_threshold
-            )
+                peak_mask = utils.find_heatmap_peak_mask(
+                    heatmap,
+                    peak_window,
+                    args.peak_threshold
+                )
+            stream.synchronize()
 
-            keypoints = keypointmap[0][peak_mask[0, 0]]
+            keypoints = keypointmap[0][peak_mask[0, 0]].cpu().numpy()
 
             vis_image = utils.draw_box(
                 image,
