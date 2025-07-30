@@ -47,7 +47,8 @@ def make_offset_grid(
     grid = torch.stack(
         torch.meshgrid(
             stride[0] * (torch.arange(size[0]) + 0.5),
-            stride[1] * (torch.arange(size[1]) + 0.5)
+            stride[1] * (torch.arange(size[1]) + 0.5),
+            indexing="ij"
         ),
         dim=-1
     )
