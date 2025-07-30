@@ -109,6 +109,18 @@ For more options
 python3 predict.py --help
 ```
 
+### Step 5 - Run inference on an MP4 video.
+
+```bash
+python3 predict_video.py <engine_path> <video_path> --output=<output_path>
+```
+
+For more options
+
+```
+python3 predict_video.py --help
+```
+
 ### Next Steps
 
 Try modifying the predict.py code to visualize inference on a live camera feed.
